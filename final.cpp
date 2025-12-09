@@ -11,6 +11,8 @@
 #include <iomanip>
 #include <set> 
 
+using namespace std::chrono;
+
 class ITemperaturaStorage {
 public:
     virtual void insert(double value) = 0;
@@ -239,7 +241,9 @@ void armazenarDecisao(const DadosSolo& dados, const DecisaoIrrigacao& decisao, c
 void processarCicloDeDados(ITemperaturaStorage& storage) {
     if (storage.size() < 2) return;
 
+    std::cout << "\n**************************************************\n";
     std::cout << "* PROCESSAMENTO DE DADOS (FIM DO CICLO)          *\n";
+    std::cout << "**************************************************\n";
 
     storage.printSorted();
 
@@ -259,31 +263,76 @@ void processarCicloDeDados(ITemperaturaStorage& storage) {
     std::cout << "Leituras entre 25.0C e 30.0C: " << intervalo.size() << " ocorrencias.\n";
 
     if (storage.size() >= 3) {
-        double minVal = storage.getMin(1)[0];
-        double maxVal = storage.getMax(1)[0];
         ultimaTemperaturaMediaQuatroHoras = mediana; 
     } else {
         ultimaTemperaturaMediaQuatroHoras = mediana;
     }
     
     std::cout << "Media/Referencia p/ Irrigacao: " << ultimaTemperaturaMediaQuatroHoras << " C\n";
+    std::cout << "**************************************************\n\n";
 
     storage.clear();
 }
 
-int main() {
-    std::srand(std::time(0));
+void rodarBenchmark(ITemperaturaStorage* storage, int N) {
+    std::cout << "\n--- TESTE DE DESEMPENHO (N=" << N << ") ---\n";
 
-    // VersaoBasica tempStorage; 
-    VersaoAprimorada tempStorage; 
+    std::vector<double> valoresGerados;
+    valoresGerados.reserve(N);
 
+    auto inicio_insercao = high_resolution_clock::now();
+    
+    for (int i = 0; i < N; ++i) {
+        double temp = 20.0 + (std::rand() % 150) / 10.0;
+        storage->insert(temp);
+        valoresGerados.push_back(temp);
+    }
+    
+    auto fim_insercao = high_resolution_clock::now();
+    auto duracao_insercao = duration_cast<microseconds>(fim_insercao - inicio_insercao);
+    
+    std::cout << "Insercao de " << N << " elementos: " << duracao_insercao.count() << " us\n";
+
+    auto inicio_mediana = high_resolution_clock::now();
+    double mediana = storage->median();
+    auto fim_mediana = high_resolution_clock::now();
+    auto duracao_mediana = duration_cast<microseconds>(fim_mediana - inicio_mediana);
+
+    std::cout << "Mediana (1 operacao): " << duracao_mediana.count() << " us\n";
+
+    double x = 25.0;
+    double y = 35.0;
+    
+    auto inicio_range = high_resolution_clock::now();
+    std::vector<double> resultados_range = storage->rangeQuery(x, y);
+    auto fim_range = high_resolution_clock::now();
+    auto duracao_range = duration_cast<microseconds>(fim_range - inicio_range);
+
+    std::cout << "Range Query (25.0-35.0): " << duracao_range.count() << " us (" << resultados_range.size() << " resultados)\n";
+
+    if (!valoresGerados.empty()) {
+        double valor_remover = valoresGerados.front();
+        
+        auto inicio_remocao = high_resolution_clock::now();
+        storage->remove(valor_remover);
+        auto fim_remocao = high_resolution_clock::now();
+        auto duracao_remocao = duration_cast<microseconds>(fim_remocao - inicio_remocao);
+        
+        std::cout << "Remocao (1 elemento): " << duracao_remocao.count() << " us\n";
+    }
+
+    storage->clear();
+    std::cout << "------------------------------------------\n";
+}
+
+void iniciarSimulacaoContinua(ITemperaturaStorage& tempStorage) {
     const int NUM_COLETAS_CICLO = 16;
     int contadorColetas = 0;
     const std::string NOME_ARQUIVO_LOG = "log_irrigacao.txt";
 
     std::cout << "--- Sistema de Coleta Inteligente Iniciado ---\n";
     std::cout << "Estrutura de dados ativa: " << (dynamic_cast<VersaoAprimorada*>(&tempStorage) ? "Arvore (Otimizada)" : "Lista (Basica)") << "\n";
-
+    std::cout << "==============================================\n";
 
     while (true) {
         DadosSolo novoDado = coletarDadosSolo_Simulado();
@@ -303,6 +352,40 @@ int main() {
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
+}
+
+int main() {
+    std::srand(std::time(0));
+    
+    std::vector<int> volumes = {100, 1000, 10000, 100000};
+    
+    // FASE 1: BENCHMARKS
+    
+    std::cout << "========================================================\n";
+    std::cout << "INICIANDO TESTES: VERSAO BASICA (LISTA ORDENADA - O(N))\n";
+    std::cout << "========================================================\n";
+    
+    VersaoBasica storageBasica;
+    for (int N : volumes) {
+        rodarBenchmark(&storageBasica, N);
+    }
+
+    std::cout << "========================================================\n";
+    std::cout << "INICIANDO TESTES: VERSAO APRIMORADA (RBT - O(log N))\n";
+    std::cout << "========================================================\n";
+
+    VersaoAprimorada storageAprimorada;
+    for (int N : volumes) {
+        rodarBenchmark(&storageAprimorada, N);
+    }
+    
+    std::cout << "\n\n**************************************************\n";
+    std::cout << "* BENCHMARKS CONCLUIDOS. INICIANDO SIMULACAO AO VIVO. *\n";
+    std::cout << "**************************************************\n\n";
+
+    // FASE 2: SIMULAÇÃO CONTÍNUA (USANDO A VERSÃO OTIMIZADA)
+    VersaoAprimorada producaoStorage; 
+    iniciarSimulacaoContinua(producaoStorage);
 
     return 0;
 }
