@@ -78,7 +78,7 @@ ProjetoIrrigacao/
 ├── src/
 │   ├── IrrigationSystem.cpp      # Implementação da lógica
 │   └── main.cpp                  # Ponto de entrada
-└── Makefile (ou CMakeLists.txt) text'''
+└── Makefile (ou CMakeLists.txt) 
 
 
 
