@@ -70,23 +70,7 @@ ProjetoIrrigacao/
 ├── src/
 │   ├── IrrigationSystem.cpp      # Implementação da lógica
 │   └── main.cpp                  # Ponto de entrada
-└── Makefile (ou CMakeLists.txt)'''
-
-## 📚 Referências
-CORMEN, T. H. et al. Algoritmos: Teoria e Prática. 3. ed. Elsevier, 2012.
-
-
-
-
-
-SEDGEWICK, R.; WAYNE, K. Algorithms. 4. ed. Addison-Wesley, 2011.
-
-
-
-
-
-Material de aula da disciplina de Estrutura de Dados - Lig Prog.
-
+└── Makefile (ou CMakeLists.txt) text'''
 
 
 
