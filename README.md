@@ -10,9 +10,9 @@ Este projeto visa resolver problemas de escalabilidade no sistema de monitoramen
 ---
 
 ## 🛑 O Problema
-O sistema legado da empresa utiliza listas lineares ordenadas para armazenar leituras de centenas de sensores que enviam dados continuamente[cite: 6, 10, 11].
-**Gargalo:** A complexidade **O(N)** para inserções torna o sistema inviável à medida que o volume de dados cresce[cite: 11].
-**Consequência:** Latência e atraso na detecção de anomalias térmicas críticas[cite: 11].
+O sistema legado da empresa utiliza listas lineares ordenadas para armazenar leituras de centenas de sensores que enviam dados continuamente.
+**Gargalo:** A complexidade **O(N)** para inserções torna o sistema inviável à medida que o volume de dados cresce.
+**Consequência:** Latência e atraso na detecção de anomalias térmicas críticas.
 
 ---
 
@@ -25,7 +25,7 @@ O trabalho implementa e compara o desempenho de duas versões do sistema:
 * **Custo de Inserção:** O(N) devido ao deslocamento de memória.
 * **Consultas:** Rápidas (O(1) ou O(logN)) devido à contiguidade de memória.
 
-### [cite_start]2. Versão Aprimorada (Árvore Rubro-Negra / Red-Black Tree) 
+### 2. Versão Aprimorada (Árvore Rubro-Negra / Red-Black Tree) 
 * Estrutura escolhida por ser uma árvore binária de busca auto-balanceada
 * **Por que Rubro-Negra e não AVL?** Em cenários industriais com muitas escritas (sensores enviando dados o tempo todo), a Rubro-Negra realiza menos rotações que a AVL, oferecendo o melhor compromisso entre atualização e consulta.
 * **Complexidade:** Garante O(logN) para inserção, remoção e busca no pior caso.
