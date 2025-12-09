@@ -55,6 +55,14 @@ Os testes de estresse foram realizados variando o tamanho da entrada (N) de 1.00
 
 ---
 
+## Referências
+
+1. **CORMEN, T. H. et al.** *Algoritmos: Teoria e Prática*. 3. ed. Elsevier, 2012.
+2. **SEDGEWICK, R.; WAYNE, K.** *Algorithms*. 4. ed. Addison-Wesley, 2011.
+3. Material de aula da disciplina de Estrutura de Dados - Lig Prog.
+
+---
+
 ## 📂 Organização do Projeto
 
 A estrutura de diretórios do projeto é organizada da seguinte forma:
