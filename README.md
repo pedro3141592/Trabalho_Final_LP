@@ -2,7 +2,7 @@ Análise de Estruturas de Dados para Sensores Industriais
 
 Este projeto visa resolver problemas de escalabilidade no sistema de monitoramento de temperatura de uma empresa de automação industrial, comparando duas abordagens de estruturas de dados em C++.
 
-## 👥 Autores [
+## 👥 Autores 
 * **João Pedro Jung**
 * **Pedro Quitanilha Bezerra**
 * **Mateus Francelino Alexandre**
@@ -42,7 +42,7 @@ Os testes de estresse foram realizados variando o tamanho da entrada (N) de 1.00
 
 **Ambiente de Teste:** CPU AMD Ryzen 5 5500, Compilador g++ (std=c++17).
 
-### Tabela de Comparação de Inserção [
+### Tabela de Comparação de Inserção 
 
 | N (Entradas) | Vetor Ordenado (ms) | Árvore Rubro-Negra (ms) | Análise |
 | :--- | :--- | :--- | :--- |
